@@ -5,3 +5,8 @@ class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
         fields = ('amount',)
+
+class AccountDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account
+        fields = '__all__'
