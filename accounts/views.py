@@ -58,3 +58,14 @@ class AccountDetailView(APIView):
         else:
             return Response("작성자가 아닙니다!", status=status.HTTP_403_FORBIDDEN)
 
+class AccountDetailCopyView(APIView):
+    def post (self, request, account_id):
+        account = get_object_or_404(Account, id=account_id)
+        account.pk = None
+        serializer = AddAccountSerializer(data=account.__dict__)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
