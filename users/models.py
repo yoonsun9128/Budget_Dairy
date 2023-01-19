@@ -4,9 +4,9 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 class UserManager(BaseUserManager):
     def create_user(self, email, name, password=None):
         if not email:
-            raise ValueError('must have user email')
+            raise ValueError('이메일을 입력해 주세요.')
         if not name:
-            raise ValueError('must have user name')
+            raise ValueError('username을 입력해 주세요.')
         user = self.model(
             email = self.normalize_email(email),
             name = name
@@ -26,8 +26,8 @@ class UserManager(BaseUserManager):
         return user
 
 class User(AbstractBaseUser):
-    email = models.EmailField(default='', max_length=100, unique=True)
-    name = models.CharField(default='', max_length=100, unique=True)
+    email = models.EmailField(max_length=100, unique=True)
+    name = models.CharField(max_length=100, unique=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 
@@ -50,3 +50,9 @@ class User(AbstractBaseUser):
         "Does the user have permissions to view the app `app_label`?"
         # Simplest possible answer: Yes, always
         return True
+
+    @property
+    def is_staff(self):
+        "Is the user a member of staff?"
+        # Simplest possible answer: All admins are staff
+        return self.is_admin
