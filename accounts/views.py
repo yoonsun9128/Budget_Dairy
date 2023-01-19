@@ -4,13 +4,13 @@ from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
 from accounts.models import Account
 from users.models import User
-from accounts.serializers import AccountSerializer, AccountDetailSerializer, AddAccountSerializer
+from accounts.serializers import AccountSerializer, AccountDetailSerializer, AddAccountSerializer, AccountEditSerializer
 
 class AccountAllView(APIView):
     def get(self, request):
         if not request.user.is_authenticated:
             return Response({"message":"로그인 해주세요"}, status=status.HTTP_401_UNAUTHORIZED)
-        account_list = Account.objects.all()
+        account_list = Account.objects.filter(user=request.user)
         serializer = AccountSerializer(account_list, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -28,4 +28,11 @@ class AccountDetailView(APIView):
         serializer = AccountDetailSerializer(account)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    def put(self, request, account_id):
+        account = get_object_or_404(Account, id=account_id)
+        if request.user == account.user:
+            serializer = AccountEditSerializer(account)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response("작성자가 아닙니다!", status=status.HTTP_403_FORBIDDEN)
 
