@@ -50,3 +50,11 @@ class AccountDetailView(APIView):
         else:
             return Response("작성자가 아닙니다!", status=status.HTTP_403_FORBIDDEN)
 
+    def delete(self, request, account_id):
+        account = get_object_or_404(Account, id=account_id)
+        if request.user == account.user:
+            account.delete()
+            return Response({"message":"삭제완료"},status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response("작성자가 아닙니다!", status=status.HTTP_403_FORBIDDEN)
+
