@@ -16,6 +16,11 @@ class AccountAllView(APIView):
 
     def post(self, request):
         serializer = AddAccountSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class AccountDetailView(APIView):
     def get(self, request, account_id):
