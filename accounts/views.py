@@ -10,7 +10,11 @@ class AccountAllView(APIView):
     def get(self, request):
         if not request.user.is_authenticated:
             return Response({"message":"로그인 해주세요"}, status=status.HTTP_401_UNAUTHORIZED)
-        account_list = Account.objects.filter(user=request.user)
+        payment = request.GET.get('payment_method')
+        if payment == None:
+            account_list = Account.objects.filter(user=request.user)
+        elif payment:
+            account_list = Account.objects.filter(user=request.user,method=payment )
         serializer = AccountSerializer(account_list, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 

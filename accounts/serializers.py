@@ -2,9 +2,13 @@ from rest_framework import serializers
 from accounts.models import Account
 
 class AccountSerializer(serializers.ModelSerializer):
+    created_at = serializers.SerializerMethodField()
+    def get_created_at(self, obj):
+        return obj.created_at.strftime('%Y-%m-%d')
+
     class Meta:
         model = Account
-        fields = ('amount',)
+        fields = ('amount','created_at')
 
 class AccountDetailSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
