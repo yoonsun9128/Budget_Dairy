@@ -42,9 +42,6 @@ class UserSerializer(serializers.ModelSerializer):
                 detail=("password는 영문 숫자 조합으로 구성되어야 합니다.")
             )
 
-        if User.objects.filter(email=data).exists():
-            raise serializers.ValidationError("이메일이 이미 존재합니다.")
-
         if User.objects.filter(name=data).exists():
             raise serializers.ValidationError("Username이 이미 존재합니다.")
 
