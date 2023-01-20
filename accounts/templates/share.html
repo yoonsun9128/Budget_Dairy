@@ -1,0 +1,14 @@
+{% load social_share %}
+
+{% post_to_facebook  get_absolute_url "Post to Facebook!" %}
+{% post_to_twitter "New Song: . Check it out!"  get_absolute_url "Post to Twitter" %}
+{% post_to_gplus  get_absolute_url "Post to Google+!" %}
+{% post_to_linkedin  get_absolute_url %}
+{% send_email "New Song: . Check it out!"  get_absolute_url "Share via email" %}
+{% post_to_reddit "New Song: {{object.title}}"  get_absolute_url %}
+{% post_to_telegram "New Song: {{object.title}}" get_absolute_url %}
+{% post_to_whatsapp  get_absolute_url "Share via WhatsApp" %}
+{% save_to_pinterest  get_absolute_url %}
+{% add_pinterest_script %} // Required for save_to_pinterest. Add to the end of body tag.
+{% copy_to_clipboard get_absolute_url "Copy to clipboard!" %}
+{% add_copy_script %} // Required for copy_to_clipboard. Add to the end of body tag.

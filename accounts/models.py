@@ -1,5 +1,7 @@
 from django.db import models
+from django.urls import reverse
 from users.models import User
+
 
 class Account(models.Model):
     Payment_Method = (
@@ -17,3 +19,6 @@ class Account(models.Model):
 
     def __str__(self):
         return self.method
+
+    def get_absolute_url(self):
+        return reverse('accounts:AccountDetailView', kwargs={'account_id':self.id})

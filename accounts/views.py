@@ -1,3 +1,4 @@
+from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework import status, permissions
 from rest_framework.response import Response
@@ -73,3 +74,10 @@ class AccountDetailCopyView(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+class ShareUrlView(APIView):
+    def get (self, request, account_id):
+        account = get_object_or_404(Account, id=account_id)
+        print(account.get_absolute_url)
+        url = account.get_absolute_url
+        return render(request, 'share.html', {'url':url} )
