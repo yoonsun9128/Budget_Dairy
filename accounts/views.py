@@ -6,8 +6,14 @@ from rest_framework.generics import get_object_or_404
 from accounts.models import Account
 from users.models import User
 from accounts.serializers import AccountSerializer, AccountDetailSerializer, AddAccountSerializer, AccountEditSerializer
+from drf_yasg.utils import swagger_auto_schema
 
 class AccountAllView(APIView):
+    @swagger_auto_schema(
+        operation_description="가계부 전체 리스트",
+        operation_summary="가계부 전체 리스트",
+        responses={200:"성공", 401:"인증 오류", 403:"접근 권한 에러", 500:"서버 에러"},
+    )
     def get(self, request):
         if not request.user.is_authenticated:
             return Response({"message":"로그인 해주세요"}, status=status.HTTP_401_UNAUTHORIZED)
@@ -19,6 +25,11 @@ class AccountAllView(APIView):
         serializer = AccountSerializer(account_list, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @swagger_auto_schema(
+        operation_description="가계부 등록",
+        operation_summary="가계부 등록",
+        responses={200:"성공", 401:"인증 오류", 403:"접근 권한 에러", 500:"서버 에러"},
+    )
     def post(self, request):
         serializer = AddAccountSerializer(data=request.data)
         if serializer.is_valid():
@@ -28,11 +39,21 @@ class AccountAllView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class AccountDetailView(APIView):
+    @swagger_auto_schema(
+        operation_description="가계부 상세페이지",
+        operation_summary="가계부 상세페이지",
+        responses={200:"성공", 401:"인증 오류", 403:"접근 권한 에러", 500:"서버 에러"},
+    )
     def get(self, request, account_id):
         account = get_object_or_404(Account, id=account_id)
         serializer = AccountDetailSerializer(account)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @swagger_auto_schema(
+        operation_description="가계부 상세페이지 수정",
+        operation_summary="가계부 상세페이지 수정",
+        responses={200:"성공", 401:"인증 오류", 403:"접근 권한 에러", 500:"서버 에러"},
+    )
     def put(self, request, account_id):
         account = get_object_or_404(Account, id=account_id)
         data = request.data
@@ -55,6 +76,11 @@ class AccountDetailView(APIView):
         else:
             return Response("작성자가 아닙니다!", status=status.HTTP_403_FORBIDDEN)
 
+    @swagger_auto_schema(
+        operation_description="가계부 상세페이지 삭제",
+        operation_summary="가계부 상세페이지 삭제",
+        responses={200:"성공", 401:"인증 오류", 403:"접근 권한 에러", 500:"서버 에러"},
+    )
     def delete(self, request, account_id):
         account = get_object_or_404(Account, id=account_id)
         if request.user == account.user:
@@ -64,6 +90,11 @@ class AccountDetailView(APIView):
             return Response("작성자가 아닙니다!", status=status.HTTP_403_FORBIDDEN)
 
 class AccountDetailCopyView(APIView):
+    @swagger_auto_schema(
+        operation_description="가계부 복사",
+        operation_summary="가계부 복사",
+        responses={200:"성공", 401:"인증 오류", 403:"접근 권한 에러", 500:"서버 에러"},
+    )
     def post (self, request, account_id):
         account = get_object_or_404(Account, id=account_id)
         account.pk = None
@@ -76,6 +107,11 @@ class AccountDetailCopyView(APIView):
 
 
 class ShareUrlView(APIView):
+    @swagger_auto_schema(
+        operation_description="가계부 공유 url 제공",
+        operation_summary="가계부 공유 url 제공",
+        responses={200:"성공", 401:"인증 오류", 403:"접근 권한 에러", 500:"서버 에러"},
+    )
     def get (self, request, account_id):
         account = get_object_or_404(Account, id=account_id)
         print(account.get_absolute_url)
